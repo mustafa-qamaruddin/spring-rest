@@ -50,10 +50,15 @@ public class LogicService {
   }
 
   public List<Santa> collect(int year) {
+    var retSantas = santasRepository.findByYear(year);
+    if (!retSantas.isEmpty())
+      return retSantas;
     List<Santa> santas = new ArrayList<>();
     membersRepository.findAll().forEach(member -> {
-      santas.add(assignTaker(year, member));
-      santas.add(assignGiver(year, member));
+      var t = assignTaker(year, member);
+      if (t != null) santas.add(t);
+      var g = assignGiver(year, member);
+      if (g != null) santas.add(g);
     });
     return santas;
   }
